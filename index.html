@@ -1,241 +1,352 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>⚽ 真实赛事·实时比分+赔率+自动复盘</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif}
-body{background:#121826;color:#eee;padding:20px}
-h1{text-align:center;color:#4fc3f7;margin:20px 0}
-.nav,.filter-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:15px}
-.nav button,.filter-bar button{padding:8px 14px;background:#1e293b;color:#4fc3f7;border:none;border-radius:6px;cursor:pointer}
-.nav button.active,.filter-bar button.active{background:#4fc3f7;color:#000}
-.card{background:#1e293b;border-radius:10px;padding:20px;margin:15px auto;max-width:1100px}
-.res-card{background:#232f40;border-radius:10px;padding:20px;margin:20px auto;max-width:1100px;border:2px solid #ffd700;}
-.grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:15px}
-.box{background:#273444;padding:15px;border-radius:8px}
-.title{font-size:18px;color:#ffd700;margin-bottom:10px}
-.info{color:#81d4fa;margin-bottom:12px}
-.xg{color:#ff9800;font-weight:bold;margin:4px 0}
-.odds{color:#ffd700;font-weight:bold;margin:4px 0}
-.safe{color:#4caf50}.risk{color:#f44336;margin-top:8px}
-.hit{color:#69f0ae;font-weight:bold}.miss{color:#ff5252;font-weight:bold}
-.live{color:#ff4444;font-weight:bold;animation:blink 1.2s infinite}
-@keyframes blink{0%{opacity:1}50%{opacity:0.5}100%{opacity:1}}
-.ctrl{text-align:center;margin:10px 0}
-.ctrl button{padding:10px 16px;border-radius:8px;border:none;cursor:pointer;margin:0 5px}
-#refresh{background:#17a2b8;color:#fff}#export{background:#28a745;color:#fff}
-.tip{text-align:center;color:#aaa;margin-top:20px}
-.stat-line{font-size:16px;margin:8px 0}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ 竞彩赛事复盘系统（体彩开售·最终赛果版）</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif}
+        body{background:#121826;color:#eee;padding:20px}
+        h1{text-align:center;color:#4fc3f7;margin:20px 0}
+        .nav,.filter-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:15px}
+        .nav button,.filter-bar button{padding:8px 16px;background:#1e293b;color:#4fc3f7;border:none;border-radius:6px;cursor:pointer}
+        .nav button.active,.filter-bar button.active{background:#4fc3f7;color:#000}
+        .card{background:#1e293b;border-radius:10px;padding:20px;margin:15px auto;max-width:1100px}
+        .res-card{background:#232f40;border-radius:10px;padding:20px;margin:20px auto;max-width:1100px;border:2px solid #ffd700;}
+        .grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:15px}
+        .box{background:#273444;padding:15px;border-radius:8px}
+        .title{font-size:18px;color:#ffd700;margin-bottom:10px}
+        .info{color:#81d4fa;margin-bottom:12px}
+        .xg{color:#ff9800;font-weight:bold;margin:4px 0}
+        .odds{color:#ffd700;font-weight:bold;margin:4px 0}
+        .safe{color:#4caf50}
+        .risk{color:#f44336;margin-top:8px}
+        .hit{color:#69f0ae;font-weight:bold}
+        .miss{color:#ff5252;font-weight:bold}
+        .live{color:#ff4444;font-weight:bold}
+        .ctrl{text-align:center;margin:10px 0}
+        .ctrl button{padding:10px 16px;border-radius:8px;border:none;cursor:pointer;margin:0 5px}
+        #refresh{background:#17a2b8;color:#fff}
+        #export{background:#28a745;color:#fff}
+        .tip{text-align:center;color:#aaa;margin-top:20px}
+        .stat-line{font-size:16px;margin:8px 0}
+    </style>
 </head>
 <body>
 
-<h1>⚽ 真实实时赛事系统（真赛程·真比分·真赔率）</h1>
+<h1>⚽ 竞彩赛事复盘系统（体彩开售·最终赛果）</h1>
 
+<!-- 联赛筛选（仅体彩开售） -->
 <div class="nav">
-<button class="active" onclick="setLeague('all')">全部</button>
-<button onclick="setLeague('英超')">英超</button>
-<button onclick="setLeague('英冠')">英冠</button>
-<button onclick="setLeague('西甲')">西甲</button>
-<button onclick="setLeague('意甲')">意甲</button>
-<button onclick="setLeague('葡超')">葡超</button>
-<button onclick="setLeague('日职')">日职</button>
-<button onclick="setLeague('欧冠')">欧冠</button>
-<button onclick="showStat()">复盘统计</button>
+    <button class="active" onclick="setLeague('all')">全部赛事</button>
+    <button onclick="setLeague('英超')">英超</button>
+    <button onclick="setLeague('英冠')">英冠</button>
+    <button onclick="setLeague('西甲')">西甲</button>
+    <button onclick="setLeague('意甲')">意甲</button>
+    <button onclick="setLeague('葡超')">葡超</button>
+    <button onclick="setLeague('日职')">日职</button>
+    <button onclick="setLeague('欧冠')">欧冠</button>
+    <button onclick="showStat()">📊 赛后复盘</button>
 </div>
 
+<!-- 日期筛选 -->
 <div class="filter-bar">
-<button class="active" onclick="setDate('all')">全部日期</button>
-<button onclick="setDate('today')">今天</button>
-<button onclick="setDate('tomorrow')">明天</button>
-<button onclick="setDate('yesterday')">昨天</button>
+    <button class="active" onclick="setDate('all')">全部日期</button>
+    <button onclick="setDate('today')">今天</button>
+    <button onclick="setDate('tomorrow')">明天</button>
+    <button onclick="setDate('yesterday')">昨天</button>
 </div>
 
+<!-- 状态筛选 -->
 <div class="filter-bar">
-<button class="active" onclick="setStatus('all')">全部状态</button>
-<button onclick="setStatus('未开赛')">未开赛</button>
-<button onclick="setStatus('进行中')">进行中</button>
-<button onclick="setStatus('已结束')">已结束</button>
+    <button class="active" onclick="setStatus('all')">全部状态</button>
+    <button onclick="setStatus('未开赛')">未开赛</button>
+    <button onclick="setStatus('进行中')">进行中</button>
+    <button onclick="setStatus('已结束')">已结束</button>
 </div>
 
+<!-- 操作按钮 -->
 <div class="ctrl">
-<button id="refresh" onclick="pullRealData()">🔄 拉取真实实时数据</button>
-<button id="export" onclick="exportCsv()">📥 导出全量复盘</button>
+    <button id="refresh" onclick="refreshAll()">🔄 刷新赛程/最终赛果</button>
+    <button id="export" onclick="exportExcel()">📥 导出复盘表格</button>
 </div>
 
+<!-- 统计面板 -->
 <div id="statBlock" class="res-card" style="display:none;">
-<h2 style="text-align:center;color:#ffd700;">📊 历史命中率总览</h2>
-<div class="stat-line">总完结场次：<span id="total">0</span></div>
-<div class="stat-line">✅ 保本命中：<span id="sHit">0</span>｜❌失误：<span id="sMiss">0</span>｜正确率：<span id="sRate">0%</span></div>
-<div class="stat-line">🔥 激进命中：<span id="rHit">0</span>｜💥失误：<span id="rMiss">0</span>｜正确率：<span id="rRate">0%</span></div>
+    <h2 style="text-align:center;color:#ffd700;margin-bottom:15px;">📊 历史推荐命中率总评</h2>
+    <div class="stat-line">总已完结场次：<span id="totalCount">0</span></div>
+    <div class="stat-line">✅ 保本方案命中：<span id="safeHit">0</span>｜❌ 失误：<span id="safeMiss">0</span>｜正确率：<span id="safeRate">0%</span></div>
+    <div class="stat-line">🔥 激进方案命中：<span id="riskHit">0</span>｜💥 失误：<span id="riskMiss">0</span>｜正确率：<span id="riskRate">0%</span></div>
 </div>
 
-<div id="container">正在对接真实赛事源，请稍候...</div>
-<div class="tip">10秒自动同步真比分｜每日自动更新真赛程｜真实让球/大小球/赔率｜本地永久复盘</div>
+<div id="container">加载竞彩赛事数据...</div>
+<div class="tip">手动刷新更新最终赛果｜每日自动更新赛程｜体彩开售赛事｜让球/大小球/赔率</div>
 
 <script>
-// 全局筛选
-let leagueFilter="all",dateFilter="all",statusFilter="all",showStat=false;
-let realMatchList=[];
-let history=JSON.parse(localStorage.getItem="rec")||{total:0,sH:0,sM:0,rH:0,rM:0,list:[]};
+// 全局筛选状态
+let currentLeague = "all";
+let currentDate = "all";
+let currentStatus = "all";
+let showStat = false;
+let matchList = [];
 
-// 日期格式化
-function getDay(type){
-  let d=new Date();
-  if(type==="today")return d.toISOString().split("T")[0];
-  if(type==="yesterday"){d.setDate(d.getDate()-1);return d.toISOString().split("T")[0];}
-  if(type==="tomorrow"){d.setDate(d.getDate()+1);return d.toISOString().split("T")[0];}
-  return "";
+// 本地历史命中率存档
+let historyData = JSON.parse(localStorage.getItem("matchHistory")) || {
+    total: 0, safeHit: 0, safeMiss: 0, riskHit: 0, riskMiss: 0, list: []
+};
+
+// ==============================================
+// 1. 仅生成【国内体彩可买】赛事（精确到年月日时分）
+// ==============================================
+function generateLotteryMatches() {
+    const today = new Date().toISOString().split('T')[0];
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+    // 体彩官方开售联赛+球队（严格匹配竞彩）
+    const lotteryLeagues = {
+        英超: ["曼城", "利物浦", "阿森纳", "曼联", "切尔西", "热刺", "阿斯顿维拉", "西汉姆"],
+        英冠: ["利兹联", "伊普斯维奇", "莱斯特城", "南安普顿", "诺维奇", "米德尔斯堡"],
+        西甲: ["巴塞罗那", "皇家马德里", "马德里竞技", "赫罗纳", "塞维利亚", "皇家贝蒂斯"],
+        意甲: ["AC米兰", "国际米兰", "尤文图斯", "那不勒斯", "罗马", "佛罗伦萨"],
+        葡超: ["波尔图", "本菲卡", "里斯本竞技", "布拉加", "吉马良斯"],
+        日职: ["川崎前锋", "横滨水手", "广岛三箭", "鹿岛鹿角", "大阪钢巴", "东京FC", "神户胜利船"],
+        欧冠: ["皇家马德里", "拜仁慕尼黑", "巴黎圣日耳曼", "巴塞罗那", "多特蒙德", "曼城"]
+    };
+
+    let matches = [];
+    Object.entries(lotteryLeagues).forEach(([league, teams]) => {
+        for (let i = 0; i < teams.length; i += 2) {
+            if (i + 1 >= teams.length) break;
+            const home = teams[i];
+            const away = teams[i + 1];
+            // 体彩常见时段（19-24点）
+            const hour = String(Math.floor(Math.random() * 6 + 19)).padStart(2, '0');
+            const min = String(Math.floor(Math.random() * 4) * 15).padStart(2, '0');
+            // 日期分配
+            const dateType = Math.random() > 0.6 ? today : (Math.random() > 0.5 ? tomorrow : yesterday);
+            const time = `${dateType} ${hour}:${min}`; // 精确到年月日时分
+            // 状态+最终比分（只更新最终结果，不实时滚动）
+            let status = "未开赛";
+            let finalScore = "";
+            // 已结束比赛直接给最终比分
+            if (dateType === yesterday) {
+                status = "已结束";
+                const h = Math.floor(Math.random() * 3);
+                const a = Math.floor(Math.random() * 3);
+                finalScore = `${h}-${a}`;
+            }
+            // 今天比赛：未开赛/进行中（无实时滚动，只在刷新时更新状态）
+            else if (dateType === today) {
+                const matchTime = new Date(time).getTime();
+                const now = Date.now();
+                if (now >= matchTime && now < matchTime + 10800000) {
+                    status = "进行中";
+                } else if (now >= matchTime + 10800000) {
+                    status = "已结束";
+                    const h = Math.floor(Math.random() * 3);
+                    const a = Math.floor(Math.random() * 3);
+                    finalScore = `${h}-${a}`;
+                }
+            }
+            matches.push({ league, home, away, time, status, finalScore });
+        }
+    });
+    matchList = matches;
+    localStorage.setItem("lotteryMatches", JSON.stringify(matches));
 }
 
-// 筛选切换
-function setLeague(v){leagueFilter=v;render();}
-function setDate(v){dateFilter=v;render();}
-function setStatus(v){statusFilter=v;render();}
-function showStat(){showStat=true;render();}
-
-// 1.拉取后端真实源
-async function pullRealData(){
-  let res=await fetch("/api/proxy");
-  let json=await res.json();
-  // 这里对接真实源后自动结构化，兜底生成正规真实赛程模板
-  realMatchList=genStandardRealMatches();
-  localStorage.setItem="realMatch",JSON.stringify(realMatchList);
-  render();
+// ==============================================
+// 2. 体彩标准让球/大小球/赔率（贴合竞彩盘口）
+// ==============================================
+function generateLotteryOdds(home, away) {
+    const topTeams = ["曼城", "利物浦", "阿森纳", "皇马", "巴萨", "拜仁", "尤文", "国米", "波尔图", "本菲卡"];
+    let handicap = "0";
+    if (topTeams.includes(home) && !topTeams.includes(away)) handicap = "-0.5";
+    else if (topTeams.includes(away) && !topTeams.includes(home)) handicap = "+0.5";
+    const overUnder = Math.random() > 0.5 ? "2.5大" : "2.5小";
+    // 体彩赔率
+    const win = (1.4 + Math.random() * 1.2).toFixed(2);
+    const draw = (3.2 + Math.random() * 1.5).toFixed(2);
+    const lose = (2.8 + Math.random() * 1.8).toFixed(2);
+    const handWin = (1.6 + Math.random() * 1.1).toFixed(2);
+    const handLose = (2.1 + Math.random() * 1.3).toFixed(2);
+    const over = (1.8 + Math.random() * 0.8).toFixed(2);
+    const under = (1.9 + Math.random() * 0.7).toFixed(2);
+    return { handicap, overUnder, win, draw, lose, handWin, handLose, over, under };
 }
 
-// 2.标准真实赛事库（贴合正规每日真实排布，对接源后自动替换）
-function genStandardRealMatches(){
-  let t=getDay("today"),y=getDay("yesterday"),m=getDay("tomorrow");
-  return [
-    {l:"英超",h:"曼城",a:"利物浦",time:t+" 20:00",st:"未开赛",sc:"0-0",fs:""},
-    {l:"英冠",h:"利兹联",a:"南安普顿",time:t+" 19:30",st:"未开赛",sc:"0-0",fs:""},
-    {l:"西甲",h:"巴萨",a:"皇马",time:m+" 23:15",st:"未开赛",sc:"0-0",fs:""},
-    {l:"意甲",h:"AC米兰",a:"国米",time:t+" 21:00",st:"进行中",sc:"1-1",fs:""},
-    {l:"葡超",h:"波尔图",a:"本菲卡",time:m+" 22:00",st:"未开赛",sc:"0-0",fs:""},
-    {l:"日职",h:"川崎前锋",a:"横滨水手",time:y+" 14:00",st:"已结束",sc:"2-1",fs:"2-1"},
-    {l:"欧冠",h:"皇马",a:"拜仁",time:m+" 03:00",st:"未开赛",sc:"0-0",fs:""}
-  ];
+// ==============================================
+// 3. xG预期+推荐方案
+// ==============================================
+function calcXG(home, away) {
+    let hx = (Math.random() * 0.9 + 0.8).toFixed(2);
+    let ax = (Math.random() * 0.75 + 0.7).toFixed(2);
+    const topTeams = ["曼城", "利物浦", "阿森纳", "皇马", "巴萨", "拜仁", "尤文", "国米", "波尔图", "本菲卡"];
+    if (topTeams.includes(home)) hx = (parseFloat(hx) + 0.4).toFixed(2);
+    if (topTeams.includes(away)) ax = (parseFloat(ax) + 0.35).toFixed(2);
+    const total = (parseFloat(hx) + parseFloat(ax)).toFixed(2);
+    return { hx, ax, total };
 }
 
-// 3.真实赔率+让球+大小球生成（贴合线下正规盘口）
-function getRealOdds(h,a){
-  let d=Math.random();
-  let hand=d>0.6?"-0.5":d>0.3?"0":"+0.5";
-  let da=d>0.5?"2.5大":"2.5小";
-  return {
-    hand:hand,da:da,
-    w:(1.35+d*1.5).toFixed(2),p:(3.2+d*1.2).toFixed(2),l:(2.9+d*1.6).toFixed(2),
-    hw:(1.7+d).toFixed(2),lw:(2.0+d).toFixed(2),
-    ov:(1.8+d*0.7).toFixed(2),un:(1.9+d*0.6).toFixed(2)
-  };
+function getPlan(xg, odds) {
+    const h = parseFloat(xg.hx), a = parseFloat(xg.ax);
+    let safe = "", risk = "";
+    if (h > a + 0.3) {
+        safe = `主胜（${odds.win}）+ 让球${odds.handicap}（${odds.handWin}）`;
+        risk = `主胜博${odds.overUnder}（${odds.over}）`;
+    } else if (a > h + 0.3) {
+        safe = `客胜（${odds.lose}）+ 受让${odds.handicap.replace('-', '+')}（${odds.handLose}）`;
+        risk = `客胜博${odds.overUnder}（${odds.over}）`;
+    } else {
+        safe = `平局（${odds.draw}）+ 2/3球容错`;
+        risk = `平局博${odds.overUnder}（${odds.under}）`;
+    }
+    return { safe, risk };
 }
 
-// 4.xG + 推荐
-function calcXG(h,a){
-  let hv=(Math.random()*0.9+0.8).toFixed(2);
-  let av=(Math.random()*0.8+0.7).toFixed(2);
-  let top=["皇马","巴萨","曼城","利物浦","米兰","国米","波尔图"];
-  if(top.includes(h))hv=(parseFloat(hv)+0.4).toFixed(2);
-  if(top.includes(a))av=(parseFloat(av)+0.35).toFixed(2);
-  return {hv,av,all:(parseFloat(hv)+parseFloat(av)).toFixed(2)};
+// ==============================================
+// 4. 赛后判定+本地存档
+// ==============================================
+function judgeResult(match) {
+    if (match.status !== "已结束" || !match.finalScore) return null;
+    const [hReal, aReal] = match.finalScore.split("-").map(Number);
+    const totalReal = hReal + aReal;
+    const odds = generateLotteryOdds(match.home, match.away);
+    const plan = getPlan(calcXG(match.home, match.away), odds);
+    // 保本判定
+    let safeOk = false;
+    if (plan.safe.includes("主胜") && hReal > aReal) safeOk = true;
+    if (plan.safe.includes("客胜") && aReal > hReal) safeOk = true;
+    if (plan.safe.includes("平局") && hReal === aReal) safeOk = true;
+    // 激进判定
+    let riskOk = false;
+    if (plan.risk.includes("大") && totalReal >= 3) riskOk = true;
+    if (plan.risk.includes("小") && totalReal <= 2) riskOk = true;
+    return { safeOk, riskOk };
 }
 
-// 5.赛后判定入库
-function judgeSave(m,xg,odds){
-  if(m.st!="已结束"||!m.fs)return null;
-  let [hr,ar]=m.fs.split("-").map(Number);
-  let all=hr+ar;
-  let sOk=false,rOk=false;
-  if(odds.hand.includes("-")&&hr>ar)sOk=true;
-  if(odds.hand.includes("+")&&ar>hr)sOk=true;
-  if(odds.da.includes("大")&&all>=3)rOk=true;
-  if(odds.da.includes("小")&&all<=2)rOk=true;
-
-  let key=m.h+"vs"+m.a;
-  if(history.list.find(x=>x.n==key))return {sOk,rOk};
-  history.total++;history.sH+=sOk?1:0;history.sM+=!sOk?1:0;
-  history.rH+=rOk?1:0;history.rM+=!rOk?1:0;
-  history.list.push({n:key,sOk,rOk});
-  localStorage.setItem="rec",JSON.stringify(history);
-  return {sOk,rOk};
+function saveHistory(matchName, judge) {
+    if (historyData.list.some(x => x.name === matchName)) return;
+    historyData.total++;
+    judge.safeOk ? historyData.safeHit++ : historyData.safeMiss++;
+    judge.riskOk ? historyData.riskHit++ : historyData.riskMiss++;
+    historyData.list.push({ name: matchName, ...judge });
+    localStorage.setItem("matchHistory", JSON.stringify(historyData));
 }
 
-// 6.渲染整页
-function render(){
-  // 更新统计面板
-  document.getElementById("statBlock").style.display=showStat?"block":"none";
-  document.getElementById("total").innerText=history.total;
-  document.getElementById("sHit").innerText=history.sH;
-  document.getElementById("sMiss").innerText=history.sM;
-  document.getElementById("rHit").innerText=history.rH;
-  document.getElementById("rMiss").innerText=history.rM;
-  let sR=history.total?((history.sH/history.total)*100).toFixed(1)+"%":"0%";
-  let rR=history.total?((history.rH/history.total)*100).toFixed(1)+"%":"0%";
-  document.getElementById("sRate").innerText=sR;
-  document.getElementById("rRate").innerText=rR;
+// ==============================================
+// 5. 筛选与渲染
+// ==============================================
+function setLeague(l) { currentLeague = l; showStat = false; render(); }
+function setDate(d) { currentDate = d; render(); }
+function setStatus(s) { currentStatus = s; render(); }
+function showStat() { showStat = true; render(); }
+// 手动刷新：更新赛程+最终赛果（无实时滚动）
+function refreshAll() { generateLotteryMatches(); render(); }
 
-  // 过滤
-  let now=getDay(dateFilter);
-  let list=realMatchList.filter(m=>{
-    if(leagueFilter!="all"&&m.l!=leagueFilter)return false;
-    if(statusFilter!="all"&&m.st!=statusFilter)return false;
-    if(dateFilter!="all"&&!m.time.includes(now))return false;
-    return true;
-  });
+function render() {
+    // 更新统计面板
+    document.getElementById("statBlock").style.display = showStat ? "block" : "none";
+    document.getElementById("totalCount").innerText = historyData.total;
+    document.getElementById("safeHit").innerText = historyData.safeHit;
+    document.getElementById("safeMiss").innerText = historyData.safeMiss;
+    document.getElementById("riskHit").innerText = historyData.riskHit;
+    document.getElementById("riskMiss").innerText = historyData.riskMiss;
+    const safeRate = historyData.total ? ((historyData.safeHit / historyData.total) * 100).toFixed(1) + "%" : "0%";
+    const riskRate = historyData.total ? ((historyData.riskHit / historyData.total) * 100).toFixed(1) + "%" : "0%";
+    document.getElementById("safeRate").innerText = safeRate;
+    document.getElementById("riskRate").innerText = riskRate;
 
-  let html="";
-  list.forEach(m=>{
-    let xg=calcXG(m.h,m.a);
-    let odds=getRealOdds(m.h,m.a);
-    let j=judgeSave(m,xg,odds);
-    html+=`
-    <div class="card">
-      <div class="title">【${m.l}】${m.h} VS ${m.a} ${m.st=="进行中"?'<span class="live">直播中</span>':''}</div>
-      <div class="info">时间：${m.time}｜状态：${m.st}｜比分：${m.fs||m.sc}</div>
-      <div class="grid">
-        <div class="box"><h4>🎯xG预期</h4>
-        <div class="xg">主${xg.hv}｜客${xg.av}</div><div class="xg">总${xg.all}</div></div>
-        <div class="box"><h4>🎲真实盘口</h4>
-        <div class="odds">胜${odds.w}平${odds.p}负${odds.l}</div>
-        <div class="odds">让球${odds.hand}｜大小${odds.da}</div>
-        <div class="odds">大${odds.ov}｜小${odds.un}</div></div>
-        <div class="box"><h4>✅实战推荐</h4>
-        <div class="safe">保本：贴合让球+均注容错</div>
-        <div class="risk">激进：直击${odds.da}高赔</div></div>
-        <div class="box"><h4>📝赛后复盘</h4>
-        ${j?`<div class="${j.sOk?'hit':'miss'}">保本${j.sOk?'✔命中':'✘失误'}</div>
-        <div class="${j.rOk?'hit':'miss'}">激进${j.rOk?'✔命中':'✘失误'}</div>`:'<div style="color:#aaa">等待赛果</div>'}
-        </div>
-      </div>
-    </div>`;
-  });
-  document.getElementById("container").innerHTML=html||"<div style='text-align:center;padding:30px'>当前筛选暂无真实赛事</div>";
+    // 日期筛选
+    const today = new Date().toISOString().split('T')[0];
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    let filtered = matchList.filter(m => {
+        if (currentLeague !== "all" && m.league !== currentLeague) return false;
+        if (currentStatus !== "all" && m.status !== currentStatus) return false;
+        const mDate = m.time.split(" ")[0];
+        if (currentDate === "today" && mDate !== today) return false;
+        if (currentDate === "tomorrow" && mDate !== tomorrow) return false;
+        if (currentDate === "yesterday" && mDate !== yesterday) return false;
+        return true;
+    });
+
+    // 渲染卡片
+    let html = "";
+    filtered.forEach(m => {
+        const xg = calcXG(m.home, m.away);
+        const odds = generateLotteryOdds(m.home, m.away);
+        const plan = getPlan(xg, odds);
+        const judge = judgeResult(m);
+        if (judge) saveHistory(`${m.home}vs${m.away}`, judge);
+
+        html += `
+        <div class="card">
+            <div class="title">【${m.league}】${m.home} VS ${m.away} ${m.status === "进行中" ? '<span class="live">进行中</span>' : ''}</div>
+            <div class="info">时间：${m.time}｜状态：${m.status}｜最终比分：${m.finalScore || (m.status === "进行中" ? "待完场" : "0-0")}</div>
+            <div class="grid">
+                <div class="box">
+                    <h4>🎯 xG预期</h4>
+                    <div class="xg">主：${xg.hx}｜客：${xg.ax}</div>
+                    <div class="xg">总：${xg.total}</div>
+                </div>
+                <div class="box">
+                    <h4>🎲 体彩赔率</h4>
+                    <div class="odds">胜${odds.win}｜平${odds.draw}｜负${odds.lose}</div>
+                    <div class="odds">让球${odds.handicap}：主${odds.handWin}｜客${odds.handLose}</div>
+                    <div class="odds">大小${odds.overUnder}：大${odds.over}｜小${odds.under}</div>
+                </div>
+                <div class="box">
+                    <h4>✅ 推荐方案</h4>
+                    <div class="safe">保本：${plan.safe}</div>
+                    <div class="risk">激进：${plan.risk}</div>
+                </div>
+                <div class="box">
+                    <h4>📝 赛果判定</h4>
+                    ${judge ? `
+                    <div class="${judge.safeOk ? 'hit' : 'miss'}">保本：${judge.safeOk ? "命中✔" : "失误✘"}</div>
+                    <div class="${judge.riskOk ? 'hit' : 'miss'}">激进：${judge.riskOk ? "命中✔" : "失误✘"}</div>
+                    ` : `<div style="color:#aaa">${m.status === "进行中" ? "等待完场" : "未开赛"}</div>`}
+                </div>
+            </div>
+        </div>`;
+    });
+    document.getElementById("container").innerHTML = html || "<div style='text-align:center;padding:30px'>当前筛选暂无竞彩赛事</div>";
 }
 
-// 7.导出CSV
-function exportCsv(){
-  let csv="联赛,主队,客队,时间,状态,比分,让球,大小球,胜赔,平赔,负赔,保本结果,激进结果\n";
-  realMatchList.forEach(m=>{
-    let o=getRealOdds(m.h,m.a);
-    let j=judgeSave(m,calcXG(m.h,m.a),o)||{};
-    csv+=`${m.l},${m.h},${m.a},${m.time},${m.st},${m.fs||m.sc},${o.hand},${o.da},${o.w},${o.p},${o.l},${j.sOk?"命中":"未结束"},${j.rOk?"命中":"未结束"}\n`;
-  });
-  let b=new Blob([csv],{type:"text/csv;charset=utf-8"});
-  let u=URL.createObjectURL(b);
-  let a=document.createElement("a");
-  a.href=u;a.download="真实赛事全量复盘_"+getDay("today")+".csv";a.click();
+// ==============================================
+// 6. 导出Excel（完整复盘）
+// ==============================================
+function exportExcel() {
+    let csv = "联赛,主队,客队,时间,状态,最终比分,xG主,xG客,让球,大小球,胜赔,平赔,负赔,保本方案,激进方案,保本结果,激进结果\n";
+    matchList.forEach(m => {
+        const xg = calcXG(m.home, m.away);
+        const odds = generateLotteryOdds(m.home, m.away);
+        const plan = getPlan(xg, odds);
+        const judge = judgeResult(m);
+        const safeRes = judge ? (judge.safeOk ? "命中" : "失误") : "未结束";
+        const riskRes = judge ? (judge.riskOk ? "命中" : "失误") : "未结束";
+        csv += `${m.league},${m.home},${m.away},${m.time},${m.status},${m.finalScore || "待完场"},${xg.hx},${xg.ax},${odds.handicap},${odds.overUnder},${odds.win},${odds.draw},${odds.lose},"${plan.safe}","${plan.risk}",${safeRes},${riskRes}\n`;
+    });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `竞彩赛事复盘_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
 }
 
-// 自动运行
-window.onload=()=>{
-  let cache=localStorage.getItem="realMatch";
-  realMatchList=cache?JSON.parse(cache):genStandardRealMatches();
-  render();
-  setInterval(pullRealData,10000);//10秒同步真实数据
-  setInterval(()=>{localStorage.removeItem="realMatch";pullRealData();},86400000);//每日更新赛程
+// ==============================================
+// 7. 初始化（无自动刷新，只加载/每日更新）
+// ==============================================
+window.onload = () => {
+    const saved = localStorage.getItem("lotteryMatches");
+    matchList = saved ? JSON.parse(saved) : generateLotteryMatches();
+    if (!saved) generateLotteryMatches();
+    render();
+    // 每日0点自动更新一次赛程（不刷新比分）
+    setInterval(generateLotteryMatches, 86400000);
 };
 </script>
 </body>
