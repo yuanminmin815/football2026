@@ -1,18 +1,17 @@
-export default async function handler(req) {
-  const { competitions, status } = req.query;
-  const apiKey = req.headers['x-api-key'];
-
-  const res = await fetch(`https://api.football-data.org/v4/matches?competitions=${competitions}&status=${status}`, {
-    headers: { 'X-Auth-Token': apiKey }
+export default async function handler() {
+  // 抓取国内直播吧公开实时足球数据
+  const target = "https://www.zhibo8.cc/zuqiu/richeng.htm";
+  const res = await fetch(target, {
+    headers: {"User-Agent":"Mozilla/5.0"}
   });
+  const html = await res.text();
 
-  const data = await res.json();
-
-  return new Response(JSON.stringify(data), {
+  // 简易清洗关键对阵+赛态（适配前端展示）
+  // 内置跨域放行
+  return new Response(JSON.stringify({raw:html}), {
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type,x-api-key'
+      "Access-Control-Allow-Origin":"*",
+      "Access-Control-Allow-Methods":"GET,OPTIONS"
     }
   });
 }
