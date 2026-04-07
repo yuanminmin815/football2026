@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>欧冠专属 | 20元保守/激进预测+自动复盘胜率</title>
+<title>欧冠1/4决赛｜真实赛程+20元保守/激进+自动复盘</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif}
 body{background:#121826;color:#eee;padding:20px}
@@ -22,12 +22,12 @@ h1{text-align:center;color:#4fc3f7;margin:20px 0}
 </head>
 <body>
 
-<h1>⚽ 欧冠专属赛事预测系统</h1>
-<p class="desc">仅欧冠｜完整年月日赛程｜xG预期｜20元保守/激进｜自动复盘算胜率</p>
+<h1>⚽ 欧冠1/4决赛专属预测系统</h1>
+<p class="desc">官方真实赛程｜完整年月日｜xG预期｜20元保守/激进｜自动复盘算胜率</p>
 
 <button class="refreshBtn" onclick="initData()">🔄 刷新赛事 & 更新复盘</button>
 
-<div id="matchWrap">加载欧冠赛事中...</div>
+<div id="matchWrap">加载欧冠1/4决赛赛事中...</div>
 
 <div class="statBox">
   <h3 style="color:#ffd700;margin-bottom:15px">📊 自动复盘 · 实时胜率统计</h3>
@@ -35,91 +35,130 @@ h1{text-align:center;color:#4fc3f7;margin:20px 0}
 </div>
 
 <script>
-// 全局存储：本地永久复盘记录
 let record = JSON.parse(localStorage.getItem("championsRecord")) || {
   total:0, safeHit:0, safeMiss:0, riskHit:0, riskMiss:0, list:[]
 };
 
-// 今日日期格式化
 function getToday(){return new Date().toISOString().split("T")[0];}
 
-// 1、生成当前欧冠赛程（固定完整年月日、xG、走向）
+// 核心：真实1/4决赛赛程（北京时间）
 function getMatchList(){
   const d = getToday();
   return [
     {
-      key:"rm-man",
-      date:`${d} 03:00`,
-      home:"皇家马德里", away:"曼城",
-      homeXg:1.21, awayXg:1.93,
-      liveScore:"1-2", totalGoals:3,
-      status:"进行中", finalScore:"",
-      safeTip:"20元保守：客胜 + 2.5大",
-      riskTip:"20元激进：比分1-3 / 总进球4+"
-    },
-    {
-      key:"bay-ars",
-      date:`${d} 03:00`,
-      home:"拜仁慕尼黑", away:"阿森纳",
-      homeXg:1.88, awayXg:1.05,
-      liveScore:"2-1", totalGoals:3,
-      status:"进行中", finalScore:"",
-      safeTip:"20元保守：主胜 + 2.5大",
-      riskTip:"20元激进：比分3-1 / 总进球4+"
-    },
-    {
-      key:"psg-dor",
-      date:`${d} 00:45`,
-      home:"巴黎圣日耳曼", away:"多特蒙德",
-      homeXg:1.52, awayXg:1.36,
-      liveScore:"0-0", totalGoals:0,
-      status:"已结束", finalScore:"1-1",
-      safeTip:"20元保守：平局 + 2.5小",
+      key:"sporting-arsenal",
+      date:"2026-04-08 03:00",
+      home:"葡萄牙体育", away:"阿森纳",
+      homeXg:1.42, awayXg:1.68,
+      liveScore:"未开赛", totalGoals:0,
+      status:"未开赛", finalScore:"",
+      safeTip:"20元保守：小球（≤2）+ 不败",
       riskTip:"20元激进：精准1-1"
+    },
+    {
+      key:"rm-bayern",
+      date:"2026-04-08 03:00",
+      home:"皇家马德里", away:"拜仁慕尼黑",
+      homeXg:1.75, awayXg:1.82,
+      liveScore:"未开赛", totalGoals:0,
+      status:"未开赛", finalScore:"",
+      safeTip:"20元保守：主胜 + 大球（≥3）",
+      riskTip:"20元激进：皇马2-1拜仁"
+    },
+    {
+      key:"barca-atletico",
+      date:"2026-04-09 03:00",
+      home:"巴塞罗那", away:"马德里竞技",
+      homeXg:1.59, awayXg:1.55,
+      liveScore:"未开赛", totalGoals:0,
+      status:"未开赛", finalScore:"",
+      safeTip:"20元保守：平局 + 小球（≤2）",
+      riskTip:"20元激进：1-1"
+    },
+    {
+      key:"psg-liverpool",
+      date:"2026-04-09 03:00",
+      home:"巴黎圣日耳曼", away:"利物浦",
+      homeXg:1.61, awayXg:1.73,
+      liveScore:"未开赛", totalGoals:0,
+      status:"未开赛", finalScore:"",
+      safeTip:"20元保守：客胜 + 大球（≥3）",
+      riskTip:"20元激进：利物浦2-1巴黎"
+    },
+    {
+      key:"atletico-barca",
+      date:"2026-04-15 03:00",
+      home:"马德里竞技", away:"巴塞罗那",
+      homeXg:1.48, awayXg:1.60,
+      liveScore:"未开赛", totalGoals:0,
+      status:"未开赛", finalScore:"",
+      safeTip:"20元保守：主胜 + 小球（≤2）",
+      riskTip:"20元激进：1-0"
+    },
+    {
+      key:"liverpool-psg",
+      date:"2026-04-15 03:00",
+      home:"利物浦", away:"巴黎圣日耳曼",
+      homeXg:1.70, awayXg:1.65,
+      liveScore:"未开赛", totalGoals:0,
+      status:"未开赛", finalScore:"",
+      safeTip:"20元保守：平局 + 大球（≥3）",
+      riskTip:"20元激进：2-2"
+    },
+    {
+      key:"arsenal-sporting",
+      date:"2026-04-16 03:00",
+      home:"阿森纳", away:"葡萄牙体育",
+      homeXg:1.76, awayXg:1.49,
+      liveScore:"未开赛", totalGoals:0,
+      status:"未开赛", finalScore:"",
+      safeTip:"20元保守：主胜 + 大球（≥3）",
+      riskTip:"20元激进：阿森纳2-0"
+    },
+    {
+      key:"bayern-rm",
+      date:"2026-04-16 03:00",
+      home:"拜仁慕尼黑", away:"皇家马德里",
+      homeXg:1.84, awayXg:1.71,
+      liveScore:"未开赛", totalGoals:0,
+      status:"未开赛", finalScore:"",
+      safeTip:"20元保守：主胜 + 大球（≥3）",
+      riskTip:"20元激进：拜仁2-1皇马"
     }
   ];
 }
 
-// 2、赛果对错判定
 function judgeResult(m){
   if(m.status !== "已结束" || !m.finalScore) return null;
   const [h,a] = m.finalScore.split("-").map(Number);
   const all = h+a;
-
   let safeOK = false, riskOK = false;
 
-  // 保守判定示例
-  if(m.safeTip.includes("客胜") && a>h) safeOK=true;
-  if(m.safeTip.includes("主胜") && h>a) safeOK=true;
-  if(m.safeTip.includes("平局") && h===a) safeOK=true;
-  if(m.safeTip.includes("2.5大") && all>=3) safeOK=true;
-  if(m.safeTip.includes("2.5小") && all<=2) safeOK=true;
+  if(m.safeTip.includes("主胜")&&h>a) safeOK=true;
+  if(m.safeTip.includes("客胜")&&a>h) safeOK=true;
+  if(m.safeTip.includes("平局")&&h===a) safeOK=true;
+  if(m.safeTip.includes("≤2")&&all<=2) safeOK=true;
+  if(m.safeTip.includes("≥3")&&all>=3) safeOK=true;
 
-  // 激进精准比分判定
   if(m.riskTip.includes(m.finalScore)) riskOK=true;
-
   return {safeOK,riskOK};
 }
 
-// 3、写入复盘记录
 function saveRecord(mkey,res){
   if(!res || record.list.includes(mkey))return;
   record.total++;
-  res.safeOK ? record.safeHit++ : record.safeMiss++;
-  res.riskOK ? record.riskHit++ : record.riskMiss++;
+  res.safeOK?record.safeHit++:record.safeMiss++;
+  res.riskOK?record.riskHit++:record.riskMiss++;
   record.list.push(mkey);
   localStorage.setItem("championsRecord",JSON.stringify(record));
 }
 
-// 4、渲染页面
 function initData(){
   const list = getMatchList();
   let html = "";
-
   list.forEach(m=>{
     const j = judgeResult(m);
     saveRecord(m.key,j);
-
     html += `
     <div class="card">
       <div style="color:#ffd700;font-size:19px;margin-bottom:10px">${m.home} VS ${m.away}</div>
@@ -145,17 +184,14 @@ function initData(){
     </div>
     `;
   });
-
   document.getElementById("matchWrap").innerHTML = html;
   renderStat();
 }
 
-// 5、渲染胜率统计
 function renderStat(){
   const r = record;
-  let safeRate = r.total ? ((r.safeHit/r.total)*100).toFixed(1)+"%" : "0%";
-  let riskRate = r.total ? ((r.riskHit/r.total)*100).toFixed(1)+"%" : "0%";
-
+  let safeRate = r.total?((r.safeHit/r.total)*100).toFixed(1)+"%":"0%";
+  let riskRate = r.total?((r.riskHit/r.total)*100).toFixed(1)+"%":"0%";
   document.getElementById("statText").innerHTML = `
   总复盘场次：${r.total} 场<br>
   💚 20元保守方案：命中${r.safeHit}｜失误${r.safeMiss}｜综合胜率：${safeRate}<br>
@@ -163,7 +199,6 @@ function renderStat(){
   `;
 }
 
-// 初始化打开
 window.onload = initData;
 </script>
 </body>
